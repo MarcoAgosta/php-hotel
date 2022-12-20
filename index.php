@@ -1,5 +1,7 @@
 <?php
 
+    $listafiltrata = [];
+
     $hotels = [
 
         [
@@ -40,6 +42,30 @@
 
     ];
 
+    $filtrare = isset($_GET["parcheggio"]);
+
+    if ($filtrare){
+        foreach ($hotels as $hotel){
+
+            if ($_GET["parcheggio"] == "true"){
+
+                if ($hotel['parking'] == true){
+                    array_push($listafiltrata, $hotel);
+                };
+            } elseif ($_GET["parcheggio"] == "false"){
+
+                if ($hotel['parking'] == false){
+                    array_push($listafiltrata, $hotel);
+                };
+            } elseif ($_GET["parcheggio"] == "null"){
+
+                array_push($listafiltrata, $hotel);
+            }
+        };
+    } else {
+        $listafiltrata = $hotels;
+    }
+
     $i = 0;
 
     
@@ -57,39 +83,50 @@
 <body>
     <div class="container mt-5">
         <h1 class="text-center mb-3">Lista Hotel</h1>
+
+        <div class="col-6 mb-4">
+            <form method="GET" action="">
+                <select name="parcheggio" class="form-select d-inline w-75" aria-label="Default select example">
+                    <option selected value="null">Parcheggio</option>
+                    <option value="true">Presente</option>
+                    <option value="false">Assente</option>
+                </select>
+                <button class="btn btn-primary mb-1"> Filtra</button>
+            </form>
+            
+        </div>
+
         <table class="table border">
-                <thead>
-                    <th>#</th>
-                    <th>Nome</th>
-                    <th>Descrizione</th>
-                    <th>Parcheggio</th>
-                    <th>Voto</th>
-                    <th>Distanza dal centro</th>
-                </thead>
+            <thead>
+                <th>#</th>
+                <th>Nome</th>
+                <th>Descrizione</th>
+                <th>Parcheggio</th>
+                <th>Voto</th>
+                <th>Distanza dal centro</th>
+            </thead>
 
-                <tbody>
-                    <?php
-
-                    foreach ($hotels as $hotel){
-                        $i++;
-                        echo "<tr>";
-                        echo "<td>{$i}</td>";
-                        echo "<td>{$hotel['name']}</td>";
-                        echo "<td>{$hotel['description']}</td>";
-                        if ($hotel['parking']==true){
-                            echo "<td>Presente</td>";
-                        } else {
-                            echo "<td>Assente</td>";
-                        };
-                        echo "<td>{$hotel['vote']}</td>";
-                        echo "<td>{$hotel['distance_to_center']} Km</td>";
-                        echo "</tr>";
+            <tbody>
+                <?php
+                foreach ($listafiltrata as $hotel){
+                    $i++;
+                    echo "<tr>";
+                    echo "<td>{$i}</td>";
+                    echo "<td>{$hotel['name']}</td>";
+                    echo "<td>{$hotel['description']}</td>";
+                    if ($hotel['parking']==true){
+                        echo "<td>Presente</td>";
+                    } else {
+                        echo "<td>Assente</td>";
                     };
+                    echo "<td>{$hotel['vote']}</td>";
+                    echo "<td>{$hotel['distance_to_center']} Km</td>";
+                    echo "</tr>";
+                };
+                ?>
+            </tbody>
 
-                    ?>
-                </tbody>
-
-            </table>
+        </table>
     </div>
     
 </body>
